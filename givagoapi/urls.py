@@ -12,7 +12,7 @@ from sponsor import views as sponsor_views
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
-router.register(r'ads', advertisement_views.AdViewSet)
+router.register(r'ad', advertisement_views.AdViewSet)
 router.register(r'sponsor', sponsor_views.SponsorViewSet)
 
 urlpatterns = [

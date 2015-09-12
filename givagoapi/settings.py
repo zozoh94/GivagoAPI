@@ -50,6 +50,7 @@ INSTALLED_APPS = (
     'embed_video',
     'taggit',
     'taggit_serializer',
+    'core',
     'advertisement',
     'sponsor',
 )
@@ -147,3 +148,5 @@ ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 
 MEDIA_ROOT = "/home/enzo/Info/givagoapi/media/"
 MEDIA_URL = "/media/"
+
+AUTH_USER_MODEL = 'core.User'

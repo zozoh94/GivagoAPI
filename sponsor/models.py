@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.contrib.auth.models import Permission
+from django.conf import settings
 
 class Sponsor(models.Model):
     name = models.CharField(max_length=255)
@@ -17,7 +18,7 @@ class Sponsor(models.Model):
         return self.name
 
 class SponsorManager(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     sponsor = models.ForeignKey('Sponsor', related_name='managers')
     def save(self, *args, **kwargs):
         add_ad = Permission.objects.get(codename='add_ad')
