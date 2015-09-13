@@ -8,6 +8,7 @@ from taggit_serializer.serializers import (TagListSerializerField,
 from .models import Ad
 from sponsor.models import Sponsor
 from sponsor.models import SponsorManager
+from sponsor.serializers import SponsorSerializer
 
 class VideoSerializer(serializers.BaseSerializer):
     def to_representation(self, obj):
@@ -28,7 +29,7 @@ class AdSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField(required=False)
     class Meta:
         model = Ad
-        fields = ('url', 'name', 'video', 'author', 'sponsor', 'sponsor_url', 'tags')
+        fields = ('id', 'url', 'name', 'video', 'author', 'sponsor', 'sponsor_url', 'tags')
     def validate_sponsor(self, value):
         if value is not None:
             try:
@@ -45,3 +46,9 @@ class AdSerializer(TaggitSerializer, serializers.ModelSerializer):
                 raise serializers.ValidationError("You can't assign this sponsor to the advertisement. You're not a manager of this sponsor.")
         else:
             return value
+
+class AdDetailSerializer(AdSerializer):
+    sponsor_detail = SponsorSerializer(read_only=True, source='sponsor')
+    class Meta:
+        model = Ad
+        fields = ('url', 'name', 'video', 'author', 'sponsor', 'sponsor_detail', 'tags')

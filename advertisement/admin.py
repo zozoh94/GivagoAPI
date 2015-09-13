@@ -2,4 +2,8 @@ from django.contrib import admin
 
 from .models import Ad
 
-admin.site.register(Ad)
+class AdAdmin(admin.ModelAdmin):
+    list_display = ('name', 'author', 'sponsor')
+    search_fields = ('name', 'author', 'sponsor')
+
+admin.site.register(Ad, AdAdmin)

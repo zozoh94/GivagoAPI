@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'core',
     'advertisement',
     'sponsor',
+    'give',
 )
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -146,7 +147,11 @@ AUTHENTICATION_BACKENDS = (
 
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 
-MEDIA_ROOT = "/home/enzo/Info/givagoapi/media/"
+AUTH_USER_MODEL = 'core.User'
+
+STATIC_URL = '/static/'
 MEDIA_URL = "/media/"
 
-AUTH_USER_MODEL = 'core.User'
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+

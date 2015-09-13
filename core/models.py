@@ -5,5 +5,5 @@ from taggit.managers import TaggableManager
 from advertisement.models import Ad
 
 class User(AbstractUser):
-    interset = TaggableManager(blank=True)
-    ads_viewed = models.ManyToManyField(Ad)
+    interest = TaggableManager(blank=True)
+    ads_viewed = models.ManyToManyField(Ad, blank=True)

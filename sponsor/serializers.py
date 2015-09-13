@@ -7,5 +7,4 @@ class SponsorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sponsor
         fields = ('name', 'description', 'logo', 'youtube', 'facebook', 'twitter', 'flickr', 'linkedin')
-
     
