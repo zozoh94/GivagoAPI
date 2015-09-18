@@ -27,7 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-SITE_ID=1
+SITE_ID = 1
+
+AUTH_USER_MODEL = 'core.User'
 
 # Application definition
 
@@ -147,7 +149,27 @@ AUTHENTICATION_BACKENDS = (
 
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 
-AUTH_USER_MODEL = 'core.User'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = True
+
+OLD_PASSWORD_FIELD_ENABLED = True
+
+from allauth.account.signals import email_confirmation_sent, email_confirmed
+from django.dispatch import receiver
+
+@receiver(email_confirmation_sent)
+def email_confirmation_sent_(confirmation, **kwargs):
+    user = confirmation.email_address.user
+    user.is_active = False
+    user.save()
+
+@receiver(email_confirmed)
+def email_confirmed_(request, email_address, **kwargs):
+    user = email_address.user
+    user.is_active = True
+    user.save()
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 STATIC_URL = '/static/'
 MEDIA_URL = "/media/"
@@ -155,3 +177,4 @@ MEDIA_URL = "/media/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
+APP_URL = "http://localhost:9001/"

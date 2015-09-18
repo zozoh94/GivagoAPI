@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from taggit_serializer.serializers import (TagListSerializerField,
                                            TaggitSerializer)
+from django.utils.translation import ugettext_lazy as _
 
 from .models import Ad
 from sponsor.models import Sponsor
@@ -19,6 +20,14 @@ class VideoSerializer(serializers.BaseSerializer):
             'thumbnail': video.get_thumbnail_url()
         }
     def to_internal_value(self, data):
+        try:
+            backend = detect_backend(url)
+            backend.get_code()
+        except UnknownBackendException:
+            raise serializers.ValidationError(_(u'URL could not be recognized.'))
+        except UnknownIdException:
+            raise serializers.ValidationError(_(u'ID of this video could not be '
+                                          u'recognized.'))
         return data
     
 class AdSerializer(TaggitSerializer, serializers.ModelSerializer):
