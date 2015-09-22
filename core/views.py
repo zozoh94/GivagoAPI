@@ -23,14 +23,14 @@ class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
     client_class = OAuth2Client
     def initialize_request(self, request, *args, **kwargs):
-        request =  super(FacebookLogin, self).initialize_request(request, *args, **kwargs)
+        request =  super(GoogleLogin, self).initialize_request(request, *args, **kwargs)
         self.callback_url = request.data['redirectUri']
         return request
 class TwitterLogin(SocialLoginView):
     adapter_class = TwitterOAuthAdapter
     client_class = OAuthClient
     def initialize_request(self, request, *args, **kwargs):
-        request =  super(FacebookLogin, self).initialize_request(request, *args, **kwargs)
+        request =  super(TwitterLogin, self).initialize_request(request, *args, **kwargs)
         self.callback_url = request.data['redirectUri']
         return request
 

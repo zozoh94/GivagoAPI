@@ -65,6 +65,7 @@ INSTALLED_APPS = (
 )
 
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
