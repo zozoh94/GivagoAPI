@@ -35,7 +35,7 @@ class AdSerializer(TaggitSerializer, serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='author.user.username')
     sponsor_url = serializers.HyperlinkedRelatedField(view_name='sponsor-detail', read_only=True, source='sponsor')
     sponsor = serializers.PrimaryKeyRelatedField(queryset=Sponsor.objects.all(), write_only=True, required=True)
-    tags = TagListSerializerField(required=False)
+    tags = TagListSerializerField(required=False, read_only=True)
     class Meta:
         model = Ad
         fields = ('id', 'url', 'name', 'video', 'author', 'sponsor', 'sponsor_url', 'tags')

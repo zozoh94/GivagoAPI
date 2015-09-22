@@ -1,8 +1,10 @@
 from django.contrib import admin
 from .models import User
+from django.contrib.auth.admin import UserAdmin
 
-class UserAdmin(admin.ModelAdmin):
-    can_delete = False
-    verbose_name_plural = 'user'
+class MyUserAdmin(UserAdmin):
+    fieldsets = UserAdmin.fieldsets + (
+        (None, {'fields': ('interest', 'ads_viewed')}),
+    )
 
-admin.site.register(User, UserAdmin)
+admin.site.register(User, MyUserAdmin)

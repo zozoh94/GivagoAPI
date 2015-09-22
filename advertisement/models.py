@@ -15,3 +15,5 @@ class Ad(models.Model):
     name = models.CharField(max_length=255)
     video = EmbedVideoField(null=False)
     tags = TaggableManager(blank=True)
+    def __str__(self):
+        return self.name

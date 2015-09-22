@@ -34,6 +34,7 @@ AUTH_USER_MODEL = 'core.User'
 # Application definition
 
 INSTALLED_APPS = (
+    'django_admin_bootstrapped',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +42,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'bootstrap3',
     'corsheaders',
     'allauth',
     'allauth.account',
@@ -49,6 +51,8 @@ INSTALLED_APPS = (
     'rest_auth',
     'rest_auth.registration',
     'debug_toolbar',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
     'embed_video',
     'taggit',
     'taggit_serializer',
@@ -59,7 +63,6 @@ INSTALLED_APPS = (
 )
 
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
 
 MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
@@ -122,11 +125,15 @@ USE_L10N = True
 
 USE_TZ = True
 
+DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
+from django.contrib import messages
 
-STATIC_URL = '/static/'
+MESSAGE_TAGS = {
+            messages.SUCCESS: 'alert-success success',
+            messages.WARNING: 'alert-warning warning',
+            messages.ERROR: 'alert-danger error'
+}
 
 
 REST_FRAMEWORK = {
@@ -146,6 +153,10 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
+
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'core.serializers.MyUserDetailsSerializer'
+}
 
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 
@@ -170,6 +181,7 @@ def email_confirmed_(request, email_address, **kwargs):
     user.save()
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST_USER = 'noreply'
 
 STATIC_URL = '/static/'
 MEDIA_URL = "/media/"
