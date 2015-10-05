@@ -6,4 +6,4 @@ class GiftSerializer(serializers.ModelSerializer):
     credits = serializers.IntegerField(write_only=True)
     class Meta:
         model = Gift
-        fields = ('id', 'name', 'credits')
+        fields = ('id', 'name', 'icon', 'credits')

@@ -40,7 +40,11 @@ class AdViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def see(self, request, pk=None):
         ad = self.get_object()
+        ad.number_views += 1
+        ad.save()
+        request.user.number_ads_viewed += 1        
         if ad.id in request.user.ads_viewed.values_list('id', flat=True):
+            request.user.save()
             return Response({'status': 'already see'})
         request.user.ads_viewed.add(ad)
         request.user.save()

@@ -60,4 +60,4 @@ class AdDetailSerializer(AdSerializer):
     sponsor_detail = SponsorSerializer(read_only=True, source='sponsor')
     class Meta:
         model = Ad
-        fields = ('url', 'name', 'video', 'author', 'sponsor', 'sponsor_detail', 'tags')
+        fields = ('url', 'name', 'video', 'author', 'sponsor', 'sponsor_detail', 'tags', 'number_views')

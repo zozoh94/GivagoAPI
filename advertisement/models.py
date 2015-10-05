@@ -15,5 +15,8 @@ class Ad(models.Model):
     name = models.CharField(max_length=255)
     video = EmbedVideoField(null=False)
     tags = TaggableManager(blank=True)
+    number_views = models.IntegerField(default=0)
     def __str__(self):
         return self.name
+    def number_views_different_user(self):
+        return self.viewers.count()

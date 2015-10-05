@@ -22,11 +22,11 @@ router.register(r'auth/user/interest', core_views.InterestUserViewSet, base_name
 router.register(r'tag', core_views.TagViewSet)
 
 def redirect_app_verify_email(request, key):
-    return RedirectView.as_view(url=settings.APP_URL+'#/verify-email/'+key+"/")(request)
+    return RedirectView.as_view(url=settings.APP_URL+'#/verify-email/'+key+"/", permanent=False)(request)
 
 
 def redirect_app_reset(request, uidb64, token):
-    return RedirectView.as_view(url=settings.APP_URL+'#/reset/'+uidb64+"/"+token+"/")(request)
+    return RedirectView.as_view(url=settings.APP_URL+'#/reset/'+uidb64+"/"+token+"/", permanent=False)(request)
 
 urlpatterns = [
     url(r'^auth/registration/account-confirm-email/(?P<key>\w+)/$', redirect_app_verify_email),
@@ -35,7 +35,7 @@ urlpatterns = [
     url(r'^', include('django.contrib.auth.urls')),
     url(r'^auth/facebook/$', core_views.FacebookLogin.as_view(), name='fb_login'),
     url(r'^auth/google/$', core_views.GoogleLogin.as_view(), name='google_login'),
-    url(r'^auth/twitter/$', core_views.TwitterLogin.as_view(), name='twitter_login'),
+    url(r'^auth/linkedin/$', core_views.LinkedInLogin.as_view(), name='linkedin_login'),
     url(r'^auth/', include('rest_auth.urls')),
     url(r'^auth/registration/', include('rest_auth.registration.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
