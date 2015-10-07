@@ -69,6 +69,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
+    'subdomains.middleware.SubdomainURLRoutingMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -76,7 +77,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 )
 
-ROOT_URLCONF = 'givagoapi.urls'
+ROOT_URLCONF = 'givagoapi.urls.api'
 
 TEMPLATES = [
     {
@@ -188,3 +189,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
 APP_URL = "http://localhost:9001/"
+
+SUBDOMAIN_URLCONFS = {
+    'api': 'givagoapi.urls.api',
+    'sponsor' : 'givago.urls.sonsor',
+    'email': 'givago.urls.email',
+    'admin' : 'admin.site.urls,',
+}
