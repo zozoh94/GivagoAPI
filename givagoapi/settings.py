@@ -192,7 +192,7 @@ APP_URL = "http://localhost:9001/"
 
 SUBDOMAIN_URLCONFS = {
     'api': 'givagoapi.urls.api',
-    'sponsor' : 'givago.urls.sonsor',
-    'email': 'givago.urls.email',
-    'admin' : 'admin.site.urls,',
+    'sponsor' : 'givagoapi.urls.sponsor',
+    'email': 'givagoapi.urls.email',
+    'admin' : 'givagoapi.urls.admin',
 }
