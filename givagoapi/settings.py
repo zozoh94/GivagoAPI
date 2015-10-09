@@ -83,7 +83,7 @@ ROOT_URLCONF = 'givagoapi.urls.api'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "core/templates"),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -163,6 +163,8 @@ ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = True
 
+ACCOUNT_ADAPTER = 'core.adapter.MyAccountAdapter'
+
 OLD_PASSWORD_FIELD_ENABLED = True
 
 from allauth.account.signals import email_confirmation_sent, email_confirmed
@@ -181,7 +183,7 @@ def email_confirmed_(request, email_address, **kwargs):
     user.save()
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST_USER = 'noreply'
+DEFAULT_FROM_EMAIL = 'noreply@givago.co'
 
 STATIC_URL = '/static/'
 MEDIA_URL = "/media/"
@@ -189,11 +191,8 @@ MEDIA_URL = "/media/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
-APP_URL = "http://localhost:9001/"
-
 SUBDOMAIN_URLCONFS = {
     'api': 'givagoapi.urls.api',
     'sponsor' : 'givagoapi.urls.sponsor',
-    'email': 'givagoapi.urls.email',
     'admin' : 'givagoapi.urls.admin',
 }

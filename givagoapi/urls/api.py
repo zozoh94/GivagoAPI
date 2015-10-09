@@ -10,8 +10,6 @@ from sponsor import views as sponsor_views
 from give import views as give_views
 from core import views as core_views
 
-from givagoapi.urls.email import redirect_app_reset
-from givagoapi.urls.email import redirect_app_verify_email
 from givagoapi.urls.sponsor import urlpatterns as sponsor_urls
 
 router = routers.DefaultRouter()
@@ -35,5 +33,3 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns.append(url(r'^admin/', include(admin.site.urls)))
     urlpatterns.append(url(r'^sponsor/', include(sponsor_urls)))
-    urlpatterns.insert(0, url(r'^auth/registration/account-confirm-email/(?P<key>\w+)/$', redirect_app_verify_email, name='account_confirm_email'))
-    urlpatterns.insert(0, url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', redirect_app_reset, name='password_reset_confirm'))
