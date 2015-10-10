@@ -10,3 +10,5 @@ class ONG(models.Model):
     description = models.TextField(null=True, blank=True)
     logo = models.ImageField(upload_to='ong_logo', null=True, blank=True)
     site = models.URLField(null=True, blank=True)
+    def __str__(self):
+        return self.name

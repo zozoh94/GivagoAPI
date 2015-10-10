@@ -10,10 +10,12 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.linkedin.views import LinkedInOAuthAdapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from rest_auth.registration.views import SocialLoginView
+from django.views.decorators.csrf import csrf_exempt
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
     client_class = OAuth2Client
+    @csrf_exempt
     def initialize_request(self, request, *args, **kwargs):
         request =  super(FacebookLogin, self).initialize_request(request, *args, **kwargs)
         self.callback_url = request.data['redirectUri']
@@ -21,6 +23,7 @@ class FacebookLogin(SocialLoginView):
 class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
     client_class = OAuth2Client
+    @csrf_exempt
     def initialize_request(self, request, *args, **kwargs):
         request =  super(GoogleLogin, self).initialize_request(request, *args, **kwargs)
         self.callback_url = request.data['redirectUri']
@@ -28,6 +31,7 @@ class GoogleLogin(SocialLoginView):
 class LinkedInLogin(SocialLoginView):
     adapter_class = LinkedInOAuthAdapter
     client_class = OAuth2Client
+    @csrf_exempt
     def initialize_request(self, request, *args, **kwargs):
         request =  super(GoogleLogin, self).initialize_request(request, *args, **kwargs)
         self.callback_url = request.data['redirectUri']

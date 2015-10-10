@@ -3,10 +3,13 @@ from rest_framework import permissions
 from rest_framework import pagination
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
+from rest_framework import status
 
 from .serializers import AdSerializer
 from .serializers import AdDetailSerializer
 from .models import Ad
+from .models import View
+from give.models import Gift
 from .permissions import IsManagerOfTheSponsorOrReadOnly
 from givagoapi.paginations import CustomPagination
 from sponsor.models import SponsorManager
@@ -25,12 +28,11 @@ class AdViewSet(viewsets.ModelViewSet):
         return super(AdViewSet, self).retrieve(request, pk)
     def get_queryset(self):
         if(self.request.user.is_anonymous()):
-            ads =  Ad.objects
-            return ads.random(4)
+            return Ad.objects.filter(remaining_views__gt=0).random(4)
         list_tags = self.request.user.interest.values_list('name', flat=True)
-        ads = Ad.objects.filter(tags__name__in=list_tags).exclude(viewer__id=self.request.user.id).distinct()
+        ads = Ad.objects.filter(remaining_views__gt=0).filter(tags__name__in=list_tags).exclude(views__viewer__id=self.request.user.id).distinct()
         if(len(ads) < 4):
-            ads = Ad.objects
+            ads = Ad.objects.filter(remaining_views__gt=0)
         return ads.random(4)
     def perform_create(self, serializer):
         try:
@@ -39,14 +41,16 @@ class AdViewSet(viewsets.ModelViewSet):
             raise ValidationError("You're not a Sponsor Manager")
     @detail_route(methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def see(self, request, pk=None):
-        ad = self.get_object()
-        ad.number_views += 1
-        ad.save()
-        request.user.number_ads_viewed += 1        
-        if ad.id in request.user.ads_viewed.values_list('id', flat=True):
-            request.user.save()
-            return Response({'status': 'already see'})
-        request.user.ads_viewed.add(ad)
-        request.user.save()
+        view = View()
+        view.ad = self.get_object()
+        view.viewer = request.user
+        try:
+            give = request.data['give']
+        except:
+            return Response({'detail' : 'Please specify give parameter.'}, status=status.HTTP_400_BAD_REQUEST)
+        view.ong = Gift.objects.get(id=give).ong        
+        view.save()
+        if view.ad.id in request.user.ads_viewed.values_list('ad', flat=True):
+            return Response({'status': 'already see'})        
         return Response({'status': 'ok'})
     

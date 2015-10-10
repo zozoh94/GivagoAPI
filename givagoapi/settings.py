@@ -55,6 +55,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.twitter',
+    'paypal.standard.ipn',
     'subdomains',
     'embed_video',
     'taggit',
@@ -196,3 +197,9 @@ SUBDOMAIN_URLCONFS = {
     'sponsor' : 'givagoapi.urls.sponsor',
     'admin' : 'givagoapi.urls.admin',
 }
+
+if DEBUG:
+    PAYPAL_RECEIVER_EMAIL = "enzo.hamelin@gmail.com"
+    PAYPAL_TEST = True
+else:
+    PAYPAL_RECEIVER_EMAIL = "ivan@givago.co"
