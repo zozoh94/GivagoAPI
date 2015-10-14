@@ -7,5 +7,9 @@ class GiftAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
 
+class ONGAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name', 'description')
+    
 admin.site.register(Gift, GiftAdmin)
-admin.site.register(ONG)
+admin.site.register(ONG, ONGAdmin)

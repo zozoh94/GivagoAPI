@@ -11,6 +11,7 @@ from allauth.socialaccount.providers.linkedin.views import LinkedInOAuthAdapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from rest_auth.registration.views import SocialLoginView
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework import serializers
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
@@ -40,6 +41,7 @@ class LinkedInLogin(SocialLoginView):
 class InterestUserViewSet(viewsets.GenericViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     lookup_field = 'name'
+    serializer_class = serializers.Serializer
     def get_queryset(self):
         return self.request.user.interest
     def list(self, request):

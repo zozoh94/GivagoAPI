@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 
 class MyUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('interest', 'ads_viewed')}),
+        (None, {'fields': ('interest',)}),
     )
 
 admin.site.register(User, MyUserAdmin)

@@ -31,3 +31,7 @@ class View(models.Model):
     ong = models.ForeignKey(ONG, related_name='ads_gift')
     date = models.DateTimeField(auto_now_add = True)
     type = models.SmallIntegerField(null=False)
+    def type_name(self):
+        if self.type == self.AD_TYPE:
+            return 'Ad'
+        return None

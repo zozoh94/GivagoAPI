@@ -50,12 +50,10 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'rest_auth',
     'rest_auth.registration',
-    'debug_toolbar',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.twitter',
-    'paypal.standard.ipn',
     'subdomains',
     'embed_video',
     'taggit',
@@ -74,8 +72,12 @@ MIDDLEWARE_CLASSES = (
     'subdomains.middleware.SubdomainURLRoutingMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsPostCsrfMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 )
 
@@ -145,7 +147,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication'
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'givagoapi.paginations.CustomPagination',
 }
@@ -186,20 +189,22 @@ def email_confirmed_(request, email_address, **kwargs):
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@givago.co'
 
-STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+    ( "bower_components", os.path.join(BASE_DIR, "bower_components")),
+)
+
+STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
-MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 SUBDOMAIN_URLCONFS = {
     'api': 'givagoapi.urls.api',
-    'sponsor' : 'givagoapi.urls.sponsor',
+    'sponsor' : 'sponsor.urls',
     'admin' : 'givagoapi.urls.admin',
 }
 
-if DEBUG:
-    PAYPAL_RECEIVER_EMAIL = "enzo.hamelin@gmail.com"
-    PAYPAL_TEST = True
-else:
-    PAYPAL_RECEIVER_EMAIL = "ivan@givago.co"
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'

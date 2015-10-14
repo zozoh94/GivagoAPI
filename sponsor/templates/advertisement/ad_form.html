@@ -1,0 +1,23 @@
+{% extends "sponsor/base_backoffice.html" %} 
+
+{% load bootstrap3 %}
+
+{% block wrapper %}
+<div class="row">
+  <div class="col-lg-12">
+    <h1 class="page-header">Add a new ad</h1>
+  </div>
+  <!-- /.col-lg-12 -->
+</div>
+
+<form action="{% url 'ad-add' %}" method="post" class="form">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+  {% buttons %}
+    <button type="submit" class="btn btn-primary pull-right">
+      Add
+    </button>
+  {% endbuttons %}
+</form>
+         
+{% endblock %}

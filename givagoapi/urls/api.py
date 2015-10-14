@@ -4,13 +4,12 @@ from django.conf.urls.static import static
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
 from django.conf import settings
+from django.http import HttpResponse
 
 from advertisement import views as advertisement_views
 from sponsor import views as sponsor_views
 from give import views as give_views
 from core import views as core_views
-
-from givagoapi.urls.sponsor import urlpatterns as sponsor_urls
 
 router = routers.DefaultRouter()
 router.register(r'ad', advertisement_views.AdViewSet)
@@ -28,8 +27,5 @@ urlpatterns = [
     url(r'^auth/', include('rest_auth.urls')),
     url(r'^auth/registration/', include('rest_auth.registration.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^robots.txt$', lambda r: HttpResponse("User-agent: *\nDisallow: /", content_type="text/plain"))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-if settings.DEBUG:
-    urlpatterns.append(url(r'^admin/', include(admin.site.urls)))
-    urlpatterns.append(url(r'^sponsor/', include(sponsor_urls)))

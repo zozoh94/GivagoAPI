@@ -1,0 +1,23 @@
+{
+  "name": "GivagoAPI",
+  "version": "0.0.0",
+  "authors": [
+    "Enzo Hamelin <enzo.hamelin@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "static/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "startbootstrap-sb-admin-2": "~1.0.7"
+  }
+}

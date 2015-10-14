@@ -24,9 +24,8 @@ class SponsorManager(models.Model):
         change_ad = Permission.objects.get(codename='change_ad')
         delete_ad = Permission.objects.get(codename='delete_ad')        
         change_sponsor = Permission.objects.get(codename='change_sponsor')
-        delete_sponsor = Permission.objects.get(codename='delete_sponsor')
         self.user.user_permissions.add(add_ad, change_ad, delete_ad,
-                                       change_sponsor, delete_sponsor)
+                                       change_sponsor)
         super(SponsorManager, self).save(*args, **kwargs)
     def __str__(self):
         return self.user.__str__()
@@ -36,7 +35,6 @@ def delete_permissions_manager(sender, instance, using, **kwargs):
     change_ad = Permission.objects.get(codename='change_ad')
     delete_ad = Permission.objects.get(codename='delete_ad')
     change_sponsor = Permission.objects.get(codename='change_sponsor')
-    delete_sponsor = Permission.objects.get(codename='delete_sponsor')
     instance.user.user_permissions.remove(add_ad, change_ad, delete_ad,
-                                          change_sponsor, delete_sponsor)
+                                          change_sponsor)
 
