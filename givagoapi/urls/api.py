@@ -17,10 +17,14 @@ router.register(r'sponsor', sponsor_views.SponsorViewSet)
 router.register(r'gift', give_views.GiftViewSet)
 router.register(r'auth/user/interest', core_views.InterestUserViewSet, base_name='interest')
 router.register(r'tag', core_views.TagViewSet)
+router.register(r'app', advertisement_views.AppViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^', include('django.contrib.auth.urls')),
+    url(r'^contact/charity', core_views.CharityContactFormView.as_view()),
+    url(r'^contact/sponsor', core_views.SponsorContactFormView.as_view()),
+    url(r'^contact/community', core_views.CommunityContactFormView.as_view()),
     url(r'^auth/facebook/$', core_views.FacebookLogin.as_view(), name='fb_login'),
     url(r'^auth/google/$', core_views.GoogleLogin.as_view(), name='google_login'),
     url(r'^auth/linkedin/$', core_views.LinkedInLogin.as_view(), name='linkedin_login'),

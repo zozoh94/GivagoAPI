@@ -10,34 +10,24 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.linkedin.views import LinkedInOAuthAdapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from rest_auth.registration.views import SocialLoginView
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework import serializers
 
-class FacebookLogin(SocialLoginView):
-    adapter_class = FacebookOAuth2Adapter
-    client_class = OAuth2Client
-    @csrf_exempt
+class SocialLoginMixin(object):
     def initialize_request(self, request, *args, **kwargs):
-        request =  super(FacebookLogin, self).initialize_request(request, *args, **kwargs)
-        self.callback_url = request.data['redirectUri']
-        return request
-class GoogleLogin(SocialLoginView):
-    adapter_class = GoogleOAuth2Adapter
-    client_class = OAuth2Client
-    @csrf_exempt
-    def initialize_request(self, request, *args, **kwargs):
-        request =  super(GoogleLogin, self).initialize_request(request, *args, **kwargs)
-        self.callback_url = request.data['redirectUri']
-        return request
-class LinkedInLogin(SocialLoginView):
-    adapter_class = LinkedInOAuthAdapter
-    client_class = OAuth2Client
-    @csrf_exempt
-    def initialize_request(self, request, *args, **kwargs):
-        request =  super(GoogleLogin, self).initialize_request(request, *args, **kwargs)
+        request =  super(SocialLoginMixin, self).initialize_request(request, *args, **kwargs)
         self.callback_url = request.data['redirectUri']
         return request
 
+class FacebookLogin(SocialLoginMixin, SocialLoginView):
+    adapter_class = FacebookOAuth2Adapter
+    client_class = OAuth2Client   
+class GoogleLogin(SocialLoginMixin, SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    client_class = OAuth2Client   
+class LinkedInLogin(SocialLoginMixin, SocialLoginView):
+    adapter_class = LinkedInOAuthAdapter
+    client_class = OAuth2Client
+  
 class InterestUserViewSet(viewsets.GenericViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     lookup_field = 'name'
@@ -74,3 +64,47 @@ class TagViewSet(viewsets.GenericViewSet):
             return Response(Tag.objects.values_list('name', flat=True))
         tags = Tag.objects.filter(name__icontains=query).values_list('name', flat=True)
         return Response(tags)
+
+from rest_framework.views import APIView
+from .serializers import CharityContactFormSerializer
+from .serializers import SponsorContactFormSerializer
+from .serializers import CommunityContactFormSerializer
+from django.core.mail import BadHeaderError
+from django.conf import settings
+from django.template.loader import get_template
+from django.template import Context
+from django.core.mail import EmailMessage
+
+class ContactFormView(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            data = serializer.data        
+            to = [settings.DEFAULT_CONTACT_EMAIL]
+            from_email = settings.DEFAULT_FROM_EMAIL
+            try:
+                message = get_template(self.template).render(Context(data))
+                msg = EmailMessage(self.subject, message, to=to, from_email=from_email, reply_to=[data['email']])
+                msg.content_subtype = 'html'
+                msg.send()
+            except BadHeaderError:
+                return Response({'detail' : 'Header incorrect.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'status' : 'ok'})
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+class CharityContactFormView(ContactFormView):
+    serializer_class = CharityContactFormSerializer
+    subject = "Charity contact"
+    template = 'email/charity.html'   
+
+class SponsorContactFormView(ContactFormView):
+    serializer_class = SponsorContactFormSerializer
+    subject = "Sponsor contact"
+    template = 'email/message.html'
+
+class CommunityContactFormView(ContactFormView):
+    serializer_class = CommunityContactFormSerializer
+    subject = "Community contact"
+    template = 'email/community.html'

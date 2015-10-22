@@ -1,16 +1,20 @@
 from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework import pagination
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from rest_framework import status
 from django.db import IntegrityError, transaction
 from django.db.models import Q
+from datetime import datetime
 
 from .serializers import AdSerializer
 from .serializers import AdDetailSerializer
+from .serializers import AppSerializer
 from .models import Ad
 from .models import View
+from .models import App
+from .models import AppClick
 from give.models import Gift
 from .permissions import IsManagerOfTheSponsorOrReadOnly
 from givagoapi.paginations import CustomPagination
@@ -51,7 +55,8 @@ class AdViewSet(viewsets.ModelViewSet):
 
         try:
             with transaction.atomic():
-                ad.remaining_views -= 1
+                if ad.remaining_views > 0:
+                    ad.remaining_views -= 1
                 view = View()
                 view.ad = ad
                 view.type = View.AD_TYPE
@@ -66,3 +71,56 @@ class AdViewSet(viewsets.ModelViewSet):
             return Response({'status': 'already see'})        
         return Response({'status': 'ok'})
     
+class AppViewSet(viewsets.ModelViewSet):
+    queryset = App.objects.all()
+    serializer_class = AppSerializer
+    permission_classes = (permissions.DjangoModelPermissionsOrAnonReadOnly,)
+    def list(self, request):
+        try:
+            os = request.query_params['os']
+        except:
+            return Response({'detail' : 'Please specify os parameter.'}, status=status.HTTP_400_BAD_REQUEST)
+        os_found = None
+        for item in App.OS_CHOICES:
+            if os in item:
+                os_found = item[0]
+                break
+        if os_found == None:   
+            return Response({'detail' : 'Please specify a correct os parameter.'}, status=status.HTTP_400_BAD_REQUEST)
+        random_app = App.objects.filter(os=os_found).random(1).first()
+        serializer = self.get_serializer(random_app, many=False)
+        return Response(serializer.data)
+    @detail_route(methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    def click(self, request, pk=None):        
+        app = self.get_object()
+        try:
+            give = request.data['give']
+        except:
+            return Response({'detail' : 'Please specify give parameter.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        app_click = AppClick()
+        app_click.app = app
+        app_click.viewer = request.user
+        app_click.ong = Gift.objects.get(id=give).ong
+        try:
+            app_click.save()
+        except IntegrityError:
+            return  Response({'detail' : 'Problem with the database.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        return Response({'clickId': app_click.id})
+    @list_route(methods=['post'], permission_classes=[permissions.AllowAny])
+    def installed(self, request):
+        try:
+            app_click_id = request.data['clickId']
+        except:
+            return Response({'detail' : 'Please specify clickId parameter.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        app_click = AppClick.objects.get(id=app_click_id)
+        app_click.installed = True
+        app_click.date_installed = datetime.now()
+        try:
+            app_click.save()
+        except IntegrityError:
+            return  Response({'detail' : 'Problem with the database.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({'status': 'ok'})

@@ -7,6 +7,7 @@ from taggit_serializer.serializers import (TagListSerializerField,
 from django.utils.translation import ugettext_lazy as _
 
 from .models import Ad
+from .models import App
 from sponsor.models import Sponsor
 from sponsor.models import SponsorManager
 from sponsor.serializers import SponsorSerializer
@@ -61,3 +62,8 @@ class AdDetailSerializer(AdSerializer):
     class Meta:
         model = Ad
         fields = ('url', 'name', 'video', 'author', 'sponsor', 'sponsor_detail', 'tags', 'number_views', 'number_views_different_user')
+
+class AppSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = App
+        fields = ('id', 'name', 'link')
