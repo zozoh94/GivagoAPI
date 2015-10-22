@@ -209,3 +209,7 @@ SUBDOMAIN_URLCONFS = {
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'
+
+SOCIALACCOUNT_PROVIDERS = \
+    {'facebook':
+       {'VERIFIED_EMAIL': True}}
