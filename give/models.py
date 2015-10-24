@@ -4,6 +4,8 @@ class Gift(models.Model):
     name = models.CharField(max_length=255, unique=True)
     icon = models.CharField(max_length=255, null=True)
     ong = models.ForeignKey('ONG', related_name='gifts', on_delete=models.SET_NULL, null=True, blank=True)
+    def number_gifts(self):
+        return self.ong.ads_gift.count() + self.ong.app_gift.filter(installed=True).count()
 
 class ONG(models.Model):
     name = models.CharField(max_length=255, unique=True)

@@ -70,7 +70,22 @@ class AdViewSet(viewsets.ModelViewSet):
         if ad.id in request.user.ads_viewed.values_list('ad', flat=True):
             return Response({'status': 'already see'})        
         return Response({'status': 'ok'})
-    
+    @list_route(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='see/dailymotion')
+    def see_dailymotion(self, request):
+        try:
+            give = request.data['give']
+        except:
+            return Response({'detail' : 'Please specify give parameter.'}, status=status.HTTP_400_BAD_REQUEST)
+        try:        
+            view = View()
+            view.type = View.DAILYMOTION_TYPE
+            view.viewer = request.user
+            view.ong = Gift.objects.get(id=give).ong
+            view.save()
+        except IntegrityError:
+            return  Response({'detail' : 'Problem with the database.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'status': 'ok'})
+        
 class AppViewSet(viewsets.ModelViewSet):
     queryset = App.objects.all()
     serializer_class = AppSerializer
@@ -107,11 +122,11 @@ class AppViewSet(viewsets.ModelViewSet):
         except IntegrityError:
             return  Response({'detail' : 'Problem with the database.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-        return Response({'clickId': app_click.id})
+        return Response({'cid': app_click.id})
     @list_route(methods=['post'], permission_classes=[permissions.AllowAny])
     def installed(self, request):
         try:
-            app_click_id = request.data['clickId']
+            app_click_id = request.data['cid']
         except:
             return Response({'detail' : 'Please specify clickId parameter.'}, status=status.HTTP_400_BAD_REQUEST)
 

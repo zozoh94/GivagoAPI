@@ -26,10 +26,12 @@ class Ad(models.Model):
 
 class View(models.Model):
     AD_TYPE = 1
+    DAILYMOTION_TYPE = 2
     TYPE_CHOICES = (
         (AD_TYPE, 'Ad'),
+        (DAILYMOTION_TYPE, 'DailyMotion'),
     )
-    ad = models.ForeignKey(Ad, related_name='views')
+    ad = models.ForeignKey(Ad, related_name='views', null=True)
     viewer = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='ads_viewed')
     ong = models.ForeignKey(ONG, related_name='ads_gift')
     date = models.DateTimeField(auto_now_add = True)

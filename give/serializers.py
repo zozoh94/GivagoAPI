@@ -3,7 +3,6 @@ from rest_framework import serializers
 from .models import Gift
 
 class GiftSerializer(serializers.ModelSerializer):
-    credits = serializers.IntegerField(write_only=True)
     class Meta:
         model = Gift
-        fields = ('id', 'name', 'icon', 'credits')
+        fields = ('id', 'name', 'icon', 'number_gifts')
