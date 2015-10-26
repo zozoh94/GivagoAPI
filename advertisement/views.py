@@ -61,7 +61,7 @@ class AdViewSet(viewsets.ModelViewSet):
                 view.ad = ad
                 view.type = View.AD_TYPE
                 view.viewer = request.user
-                view.ong = Gift.objects.get(id=give).ong
+                view.ong = Gift.objects.get(name=give).ong
                 ad.save()
                 view.save()
         except IntegrityError:
@@ -80,7 +80,7 @@ class AdViewSet(viewsets.ModelViewSet):
             view = View()
             view.type = View.DAILYMOTION_TYPE
             view.viewer = request.user
-            view.ong = Gift.objects.get(id=give).ong
+            view.ong = Gift.objects.get(name=give).ong
             view.save()
         except IntegrityError:
             return  Response({'detail' : 'Problem with the database.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -116,7 +116,7 @@ class AppViewSet(viewsets.ModelViewSet):
         app_click = AppClick()
         app_click.app = app
         app_click.viewer = request.user
-        app_click.ong = Gift.objects.get(id=give).ong
+        app_click.ong = Gift.objects.get(name=give).ong
         try:
             app_click.save()
         except IntegrityError:

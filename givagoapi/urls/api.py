@@ -18,6 +18,7 @@ router.register(r'gift', give_views.GiftViewSet)
 router.register(r'auth/user/interest', core_views.InterestUserViewSet, base_name='interest')
 router.register(r'tag', core_views.TagViewSet)
 router.register(r'app', advertisement_views.AppViewSet)
+router.register(r'staff', core_views.StaffViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls)),

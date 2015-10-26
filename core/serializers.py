@@ -2,12 +2,13 @@ from rest_framework import serializers
 from taggit_serializer.serializers import (TagListSerializerField,
                                            TaggitSerializer)
 from django.contrib.auth import get_user_model
+from .models import Staff
 
 class MyUserDetailsSerializer(TaggitSerializer, serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('username', 'email', 'number_ads_viewed', 'number_different_ads_viewed')
-        read_only_fields = ('number_ads_viewed',  'number_different_ads_viewed')
+        fields = ('username', 'email', 'number_ads_viewed', 'number_different_ads_viewed', 'number_app_installed')
+        read_only_fields = ('number_ads_viewed',  'number_different_ads_viewed', 'number_app_installed')
 
 class ContactFormSerializer(serializers.Serializer):
     first_name = serializers.CharField()
@@ -28,3 +29,8 @@ class SponsorContactFormSerializer(ContactFormSerializer):
 
 class CommunityContactFormSerializer(ContactFormSerializer):
     comment = serializers.CharField()
+
+class StaffSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Staff
+        fields = ('first_name', 'position', 'bio', 'picture', 'linkedin')       

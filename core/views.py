@@ -108,3 +108,11 @@ class CommunityContactFormView(ContactFormView):
     serializer_class = CommunityContactFormSerializer
     subject = "Community contact"
     template = 'email/community.html'
+
+from .models import Staff
+from .serializers import StaffSerializer
+
+class StaffViewSet(viewsets.ModelViewSet):
+    queryset = Staff.objects.all()
+    serializer_class = StaffSerializer
+    permission_classes = (permissions.DjangoModelPermissionsOrAnonReadOnly,)
