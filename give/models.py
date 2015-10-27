@@ -1,7 +1,7 @@
 from django.db import models
 
 class Gift(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.SlugField(max_length=255, unique=True)
     icon = models.CharField(max_length=255, null=True)
     ong = models.ForeignKey('ONG', related_name='gifts', on_delete=models.SET_NULL, null=True, blank=True)
     def number_gifts(self):

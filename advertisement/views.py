@@ -139,3 +139,35 @@ class AppViewSet(viewsets.ModelViewSet):
             return  Response({'detail' : 'Problem with the database.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response({'status': 'ok'})
+
+from django.views.decorators.http import require_GET
+from django.http import Http404, HttpResponseServerError, HttpResponse
+from django.shortcuts import redirect
+from django.contrib.auth import get_user_model
+
+@require_GET
+def app_click_view(request, give_name, app_id, username):
+    try:
+        give = Gift.objects.get(name=give_name)
+    except Gift.DoesNotExist:
+        raise Http404("Gift does not exist")
+    try:
+        app = App.objects.get(pk=app_id)
+    except App.DoesNotExist:
+        raise Http404("App does not exist")
+    try:
+        user = get_user_model().objects.get(username=username)
+    except get_user_model().DoesNotExist:
+        raise Http404("User does not exist")
+    
+    
+    app_click = AppClick()
+    app_click.app = app
+    app_click.viewer = user
+    app_click.ong = give.ong
+    try:
+        app_click.save()
+    except IntegrityError:
+        return  HttpResponseServerError('Problem with the database.')
+
+    return redirect(app.link+'&cid='+str(app_click.id))

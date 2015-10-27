@@ -23,6 +23,7 @@ router.register(r'staff', core_views.StaffViewSet)
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^', include('django.contrib.auth.urls')),
+    url(r'^app/(?P<app_id>\d+)/click/(?P<give_name>[\w_-]+)/(?P<username>[\w@.+_-]+)/$', advertisement_views.app_click_view),
     url(r'^contact/charity', core_views.CharityContactFormView.as_view()),
     url(r'^contact/sponsor', core_views.SponsorContactFormView.as_view()),
     url(r'^contact/community', core_views.CommunityContactFormView.as_view()),
