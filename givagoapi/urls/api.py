@@ -18,11 +18,11 @@ router.register(r'gift', give_views.GiftViewSet)
 router.register(r'auth/user/interest', core_views.InterestUserViewSet, base_name='interest')
 router.register(r'tag', core_views.TagViewSet)
 router.register(r'app', advertisement_views.AppViewSet)
-router.register(r'staff', core_views.StaffViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^', include('django.contrib.auth.urls')),
+    url(r'^app/installed/(?P<cid>[a-z0-9-]+)/$', advertisement_views.app_installed_view), 
     url(r'^app/(?P<app_id>\d+)/click/(?P<give_name>[\w_-]+)/(?P<username>[\w@.+_-]+)/$', advertisement_views.app_click_view),
     url(r'^contact/charity', core_views.CharityContactFormView.as_view()),
     url(r'^contact/sponsor', core_views.SponsorContactFormView.as_view()),

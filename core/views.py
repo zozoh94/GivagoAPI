@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from taggit.models import Tag
+from taggit_suggest.utils import suggest_tags
 from taggit_serializer.serializers import TaggitSerializer
 from rest_framework import permissions
 from rest_framework.response import Response
@@ -35,7 +36,7 @@ class InterestUserViewSet(viewsets.GenericViewSet):
     def get_queryset(self):
         return self.request.user.interest
     def list(self, request):
-        interests = request.user.interest.names()
+        interests = request.user.interests()
         return Response(interests)
     def create(self, request):
         try:
@@ -62,7 +63,7 @@ class TagViewSet(viewsets.GenericViewSet):
             query = request.query_params['query']
         except:
             return Response(Tag.objects.values_list('name', flat=True))
-        tags = Tag.objects.filter(name__icontains=query).values_list('name', flat=True)
+        tags = suggest_tags(query)
         return Response(tags)
 
 from rest_framework.views import APIView
@@ -108,11 +109,3 @@ class CommunityContactFormView(ContactFormView):
     serializer_class = CommunityContactFormSerializer
     subject = "Community contact"
     template = 'email/community.html'
-
-from .models import Staff
-from .serializers import StaffSerializer
-
-class StaffViewSet(viewsets.ModelViewSet):
-    queryset = Staff.objects.all()
-    serializer_class = StaffSerializer
-    permission_classes = (permissions.DjangoModelPermissionsOrAnonReadOnly,)

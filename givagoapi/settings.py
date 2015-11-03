@@ -57,6 +57,7 @@ INSTALLED_APPS = (
     'subdomains',
     'embed_video',
     'taggit',
+    'taggit_suggest',
     'taggit_serializer',
     'core',
     'advertisement',

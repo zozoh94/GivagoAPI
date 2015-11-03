@@ -123,27 +123,28 @@ class AppViewSet(viewsets.ModelViewSet):
             return  Response({'detail' : 'Problem with the database.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         return Response({'cid': app_click.id})
-    @list_route(methods=['post'], permission_classes=[permissions.AllowAny])
-    def installed(self, request):
-        try:
-            app_click_id = request.data['cid']
-        except:
-            return Response({'detail' : 'Please specify clickId parameter.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        app_click = AppClick.objects.get(id=app_click_id)
-        app_click.installed = True
-        app_click.date_installed = datetime.now()
-        try:
-            app_click.save()
-        except IntegrityError:
-            return  Response({'detail' : 'Problem with the database.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        return Response({'status': 'ok'})
 
 from django.views.decorators.http import require_GET
 from django.http import Http404, HttpResponseServerError, HttpResponse
 from django.shortcuts import redirect
 from django.contrib.auth import get_user_model
+
+
+@require_GET
+def app_installed_view(request, cid):
+    try:
+        app_click = AppClick.objects.get(id=cid)
+    except AppClick.DoesNotExist:
+        return Http404('App click does not exist.')
+        
+    app_click.installed = True    
+    app_click.date_installed = datetime.now()
+    try:
+        app_click.save()
+    except IntegrityError:
+        return  HttpResponseServerError('Problem with the database.')
+    
+    return HttpResponse('ok')
 
 @require_GET
 def app_click_view(request, give_name, app_id, username):
@@ -170,4 +171,4 @@ def app_click_view(request, give_name, app_id, username):
     except IntegrityError:
         return  HttpResponseServerError('Problem with the database.')
 
-    return redirect(app.link+'&cid='+str(app_click.id))
+    return redirect(app.link+'&cid='+str(app_click.id)+'&username='+username+'&give='+give_name+'&interest='+str(user.interest.values_list('name', flat=True)))

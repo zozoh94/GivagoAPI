@@ -1,16 +1,10 @@
 from django.contrib import admin
-from .models import User, Staff
+from .models import User
 from django.contrib.auth.admin import UserAdmin
 
 class MyUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('interest',)}),
+        (None, {'fields': ('interest', 'date_birth', 'gender', 'income_level', 'avatar')}),
     )
-
-class StaffAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'position')
-    list_display_links = ('first_name', 'position')
-    search_fields =  ('first_name', 'position')
     
 admin.site.register(User, MyUserAdmin)
-admin.site.register(Staff, StaffAdmin)
