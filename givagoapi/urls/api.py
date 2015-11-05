@@ -22,6 +22,7 @@ router.register(r'app', advertisement_views.AppViewSet)
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^', include('django.contrib.auth.urls')),
+    url(r'^auth/registration/verify-email/login/$', core_views.VerifyEmailLoginAutoView.as_view(), name='rest_verify_email_login_auto'),
     url(r'^app/installed/(?P<cid>[a-z0-9-]+)/$', advertisement_views.app_installed_view), 
     url(r'^app/(?P<app_id>\d+)/click/(?P<give_name>[\w_-]+)/(?P<username>[\w@.+_-]+)/$', advertisement_views.app_click_view),
     url(r'^contact/charity', core_views.CharityContactFormView.as_view()),

@@ -214,3 +214,4 @@ LOGOUT_URL = '/logout/'
 SOCIALACCOUNT_PROVIDERS = \
     {'facebook':
        {'VERIFIED_EMAIL': True}}
+SOCIALACCOUNT_ADAPTER = 'core.adapter.MySocialAccountAdapter'

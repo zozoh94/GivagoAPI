@@ -32,7 +32,7 @@ class View(models.Model):
         (DAILYMOTION_TYPE, 'DailyMotion'),
     )
     ad = models.ForeignKey(Ad, related_name='views', null=True)
-    viewer = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='ads_viewed')
+    viewer = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='ads_viewed', null=True, on_delete=models.SET_NULL, blank=True)
     ong = models.ForeignKey(ONG, related_name='ads_gift')
     date = models.DateTimeField(auto_now_add = True)
     type = models.SmallIntegerField(null=False, choices=TYPE_CHOICES, default=AD_TYPE)
@@ -59,4 +59,4 @@ class AppClick(models.Model):
     installed = models.BooleanField(default=False)
     date_installed = models.DateTimeField(null=True, blank=True, default=None)
     app = models.ForeignKey(App, related_name='clicks')
-    viewer = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='app_clicked')
+    viewer = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='app_clicked', null=True, on_delete=models.SET_NULL, blank=True)        
