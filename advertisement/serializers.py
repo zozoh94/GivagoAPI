@@ -66,4 +66,4 @@ class AdDetailSerializer(AdSerializer):
 class AppSerializer(serializers.ModelSerializer):
     class Meta:
         model = App
-        fields = ('id', 'name', 'link')
+        fields = ('id', 'name', 'link', 'thumbnail')

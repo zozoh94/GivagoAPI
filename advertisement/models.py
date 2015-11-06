@@ -31,7 +31,7 @@ class View(models.Model):
         (AD_TYPE, 'Ad'),
         (DAILYMOTION_TYPE, 'DailyMotion'),
     )
-    ad = models.ForeignKey(Ad, related_name='views', null=True)
+    ad = models.ForeignKey(Ad, related_name='views', null=True, on_delete=models.SET_NULL, blank=True)
     viewer = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='ads_viewed', null=True, on_delete=models.SET_NULL, blank=True)
     ong = models.ForeignKey(ONG, related_name='ads_gift')
     date = models.DateTimeField(auto_now_add = True)
@@ -40,15 +40,22 @@ class View(models.Model):
 class App(models.Model):
     ANDROIDAPP_OS = 1
     IOSAPP_OS = 2
+    IPADAPP_OS = 3
+    IPHONEAPP_OS = 4
+    FREEAPP_OS = 5
     OS_CHOICES = (
         (ANDROIDAPP_OS, 'Android'),
         (IOSAPP_OS, 'iOS'),
+        (IPADAPP_OS, 'iPad'),
+        (IPHONEAPP_OS, 'iPhone'),
+        (FREEAPP_OS, 'Free')
     )
     objects = RandomManager()
     name = models.CharField(max_length=255)
     link = models.URLField()
     os = models.SmallIntegerField(null=False, choices=OS_CHOICES, default=ANDROIDAPP_OS)
     rpa = models.DecimalField(max_digits=3, decimal_places=2)
+    thumbnail = models.URLField(null=True)
     def __str__(self):
         return self.name
     
@@ -58,5 +65,5 @@ class AppClick(models.Model):
     date = models.DateTimeField(auto_now_add = True)
     installed = models.BooleanField(default=False)
     date_installed = models.DateTimeField(null=True, blank=True, default=None)
-    app = models.ForeignKey(App, related_name='clicks')
+    app = models.ForeignKey(App, related_name='clicks', null=True, on_delete=models.SET_NULL, blank=True)
     viewer = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='app_clicked', null=True, on_delete=models.SET_NULL, blank=True)        

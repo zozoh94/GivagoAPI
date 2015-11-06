@@ -95,6 +95,7 @@ class AppViewSet(viewsets.ModelViewSet):
             os = request.query_params['os']
         except:
             return Response({'detail' : 'Please specify os parameter.'}, status=status.HTTP_400_BAD_REQUEST)
+
         os_found = None
         for item in App.OS_CHOICES:
             if os in item:
@@ -102,8 +103,25 @@ class AppViewSet(viewsets.ModelViewSet):
                 break
         if os_found == None:   
             return Response({'detail' : 'Please specify a correct os parameter.'}, status=status.HTTP_400_BAD_REQUEST)
-        random_app = App.objects.filter(os=os_found).random(1).first()
-        serializer = self.get_serializer(random_app, many=False)
+
+        apps_free = App.objects.filter(os=App.FREEAPP_OS).order_by('-rpa')
+        if os_found == App.ANDROIDAPP_OS:
+            apps = App.objects.filter(os=App.ANDROIDAPP_OS).order_by('-rpa')
+        elif os_found == App.IPADAPP_OS:
+            apps = App.objects.filter(Q(os=App.IPADAPP_OS) | Q(os=App.IOSAPP_OS)).order_by('-rpa')
+        elif os_found == App.IPHONEAPP_OS:
+            apps = App.objects.filter(Q(os=App.IPHONE_OS) | Q(os=App.IOSAPP_OS)).order_by('-rpa')
+        elif os_found == App.IOSAPP_OS:
+            apps = App.objects.filter(os=App.IOSAPP_OS).order_by('-rpa')
+        else:
+            apps = None
+        if apps == None:
+            apps = apps_free
+        else:
+            for q in apps_free:
+                apps._result_cache.append(q)
+
+        serializer = self.get_serializer(apps, many=True)
         return Response(serializer.data)
     @detail_route(methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def click(self, request, pk=None):        
@@ -171,4 +189,13 @@ def app_click_view(request, give_name, app_id, username):
     except IntegrityError:
         return  HttpResponseServerError('Problem with the database.')
 
-    return redirect(app.link+'&cid='+str(app_click.id)+'&username='+username+'&give='+give_name+'&interest='+str(user.interest.values_list('name', flat=True)))
+    app_link = app.link
+    app_link = app_link.replace('{cid}', str(app_click.id))
+    app_link = app_link.replace('{username}', username)
+    app_link = app_link.replace('{interests}', str(user.interest.values_list('name', flat=True)))
+    app_link = app_link.replace('{give}', give_name)
+    app_link = app_link.replace('{gender}', dict(get_user_model().GENDER_CHOICES)[user.gender] if user.gender else '')
+    app_link = app_link.replace('{date_birth}', str(user.date_birth) if user.date_birth else '')
+    app_link = app_link.replace('{income_level}', dict(get_user_model().INCOME_LEVEL_CHOICES)[user.income_level] if user.income_level else '')
+
+    return redirect(app_link)
