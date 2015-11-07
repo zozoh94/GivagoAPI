@@ -53,6 +53,8 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
             user = None
         if user:
             user.backend = 'django.contrib.auth.backends.ModelBackend'
+            sociallogin.user = user
+            sociallogin.user.save()
             sociallogin.account.user = user                                               
             sociallogin.account.save()
     def save_user(self, request, sociallogin, form=None):

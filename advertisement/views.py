@@ -118,9 +118,14 @@ class AppViewSet(viewsets.ModelViewSet):
         if apps == None:
             apps = apps_free
         else:
+            list(apps)
             for q in apps_free:
                 apps._result_cache.append(q)
 
+        if request.user.is_authenticated():
+            app_clicked_installed = AppClick.objects.filter(viewer=request.user).filter(installed=True).exclude(app=None)
+            apps = apps.exclude(clicks=app_clicked_installed)
+ 
         serializer = self.get_serializer(apps, many=True)
         return Response(serializer.data)
     @detail_route(methods=['post'], permission_classes=[permissions.IsAuthenticated])
