@@ -27,7 +27,7 @@ class User(AbstractUser):
     def number_ads_viewed(self):
         return self.ads_viewed.count()        
     def number_different_ads_viewed(self):
-        return self.ads_viewed.filter(type=View.AD_TYPE).values('ad').distinct().count() + self.ads_viewed.filter(type=View.DAILYMOTION_TYPE).count()
+        return self.ads_viewed.filter(type=View.AD_TYPE).values('ad').distinct().count() | self.ads_viewed.filter(type=View.DAILYMOTION_TYPE).count()
     def number_app_installed(self):
         return self.app_clicked.filter(installed=True).count()
     def interests(self):

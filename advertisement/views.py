@@ -5,7 +5,7 @@ from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from rest_framework import status
 from django.db import IntegrityError, transaction
-from django.db.models import Q
+from django.db.models import Q, Count
 from datetime import datetime
 
 from .serializers import AdSerializer
@@ -31,6 +31,7 @@ class AdViewSet(viewsets.ModelViewSet):
     #pagination_class = AdsPagination
     def retrieve(self, request, pk=None):
         self.serializer_class = AdDetailSerializer
+        self.queryset = Ad.objects.all().annotate(number_views=Count('views')).annotate(number_views_different_user=Count('views__viewer', distinct=True))
         return super(AdViewSet, self).retrieve(request, pk)
     def get_queryset(self):
         if(self.request.user.is_anonymous()):
