@@ -111,7 +111,7 @@ class AppViewSet(viewsets.ModelViewSet):
         elif os_found == App.IPADAPP_OS:
             apps = App.objects.filter(Q(os=App.IPADAPP_OS) | Q(os=App.IOSAPP_OS)).order_by('-rpa')
         elif os_found == App.IPHONEAPP_OS:
-            apps = App.objects.filter(Q(os=App.IPHONE_OS) | Q(os=App.IOSAPP_OS)).order_by('-rpa')
+            apps = App.objects.filter(Q(os=App.IPHONEAPP_OS) | Q(os=App.IOSAPP_OS)).order_by('-rpa')
         elif os_found == App.IOSAPP_OS:
             apps = App.objects.filter(os=App.IOSAPP_OS).order_by('-rpa')
         else:

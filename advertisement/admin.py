@@ -6,7 +6,7 @@ from .models import App
 from .models import AppClick
 
 class AdAdmin(admin.ModelAdmin):
-    list_display = ('name', 'author', 'sponsor')
+    list_display = ('name', 'author', 'sponsor', 'remaining_views')
     search_fields = ('name', 'sponsor__name')
 
 class ViewAdmin(admin.ModelAdmin):
