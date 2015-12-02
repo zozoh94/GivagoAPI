@@ -7,6 +7,9 @@ from rest_framework import status
 from django.db import IntegrityError, transaction
 from django.db.models import Q, Count
 from datetime import datetime
+from django.conf import settings
+from ipware.ip import get_ip
+from django.contrib.gis.geoip import GeoIP
 
 from .serializers import AdSerializer
 from .serializers import AdDetailSerializer
@@ -86,12 +89,19 @@ class AdViewSet(viewsets.ModelViewSet):
         except IntegrityError:
             return  Response({'detail' : 'Problem with the database.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response({'status': 'ok'})
-        
+
 class AppViewSet(viewsets.ModelViewSet):
     queryset = App.objects.all()
     serializer_class = AppSerializer
     permission_classes = (permissions.DjangoModelPermissionsOrAnonReadOnly,)
     def list(self, request):
+        ip = get_ip(request)
+        g = GeoIP()
+        country = g.country(ip)
+
+        if country['country_code'] not in settings.ALLOWED_COUNTRIES and ip != '127.0.0.1':
+            return Response({'detail' : 'Applications for this country are unvailable. Country detected : '+country['country_name']}, status=status.HTTP_403_FORBIDDEN)
+        
         try:
             os = request.query_params['os']
         except:

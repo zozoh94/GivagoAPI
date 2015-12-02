@@ -16,9 +16,9 @@ class ViewAdmin(admin.ModelAdmin):
     list_filter = ('date', 'type')
 
 class AppAdmin(admin.ModelAdmin):
-    list_display = ('name', 'link', 'os')
+    list_display = ('name', 'link', 'os', 'country')
     search_fields = ('name',)
-    list_filter = ('os',)
+    list_filter = ('os', 'country')
 
 class AppClickAdmin(admin.ModelAdmin):
     list_display = ('app', 'viewer', 'ong', 'date', 'installed', 'date_installed')

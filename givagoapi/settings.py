@@ -54,6 +54,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.twitter',
+    'import_export',
     'subdomains',
     'embed_video',
     'taggit',
@@ -82,6 +83,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 )
 
+GEOIP_PATH = os.path.join(BASE_DIR, "core/geoip")
+ALLOWED_COUNTRIES = ['GB']
+
 ROOT_URLCONF = 'givagoapi.urls.api'
 
 TEMPLATES = [
@@ -101,7 +105,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'givagoapi.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases

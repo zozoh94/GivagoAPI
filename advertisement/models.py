@@ -50,8 +50,18 @@ class App(models.Model):
         (IPHONEAPP_OS, 'iPhone'),
         (FREEAPP_OS, 'Free')
     )
+    GB_COUNTRY = 'GB'
+    AU_COUNTRY = 'AU'
+    FR_COUNTRY = 'FR'
+    US_COUNTRY = 'US'
+    BR_COUNTRY = 'BR'
+    ES_COUNTRY = 'ES'
+    IT_COUNTRY = 'IT'
+    COUNTRY_CHOICES = ((GB_COUNTRY, 'Great Britain'), (AU_COUNTRY, 'Australia'), (FR_COUNTRY, 'France'), (US_COUNTRY, 'USA'),
+                       (BR_COUNTRY, 'Brazil'), (ES_COUNTRY, 'Spain'), (IT_COUNTRY, 'Italia'))
     objects = RandomManager()
     name = models.CharField(max_length=255)
+    country = models.CharField(null=False, max_length=2, choices=COUNTRY_CHOICES, default=GB_COUNTRY)
     link = models.URLField()
     os = models.SmallIntegerField(null=False, choices=OS_CHOICES, default=ANDROIDAPP_OS)
     rpa = models.DecimalField(max_digits=3, decimal_places=2)
