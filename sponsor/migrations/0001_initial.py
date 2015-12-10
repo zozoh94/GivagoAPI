@@ -2,14 +2,12 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import taggit.managers
 from django.conf import settings
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('taggit', '0002_auto_20150616_2121'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -17,23 +15,22 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Sponsor',
             fields=[
-                ('id', models.AutoField(primary_key=True, verbose_name='ID', auto_created=True, serialize=False)),
+                ('id', models.AutoField(verbose_name='ID', auto_created=True, serialize=False, primary_key=True)),
                 ('name', models.CharField(max_length=255)),
-                ('description', models.TextField()),
-                ('logo', models.ImageField(upload_to='sponsor_logo')),
-                ('youtube', models.URLField()),
-                ('facebook', models.URLField()),
-                ('twitter', models.URLField()),
-                ('flickr', models.URLField()),
-                ('linkedin', models.URLField()),
-                ('tags', taggit.managers.TaggableManager(help_text='A comma-separated list of tags.', through='taggit.TaggedItem', verbose_name='Tags', to='taggit.Tag')),
+                ('description', models.TextField(blank=True, null=True)),
+                ('logo', models.ImageField(upload_to='sponsor_logo', blank=True, null=True)),
+                ('youtube', models.URLField(blank=True, null=True)),
+                ('facebook', models.URLField(blank=True, null=True)),
+                ('twitter', models.URLField(blank=True, null=True)),
+                ('flickr', models.URLField(blank=True, null=True)),
+                ('linkedin', models.URLField(blank=True, null=True)),
             ],
         ),
         migrations.CreateModel(
             name='SponsorManager',
             fields=[
-                ('id', models.AutoField(primary_key=True, verbose_name='ID', auto_created=True, serialize=False)),
-                ('sponsor', models.ForeignKey(related_name='manager', to='sponsor.Sponsor')),
+                ('id', models.AutoField(verbose_name='ID', auto_created=True, serialize=False, primary_key=True)),
+                ('sponsor', models.ForeignKey(to='sponsor.Sponsor', related_name='managers')),
                 ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
             ],
         ),

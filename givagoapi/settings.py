@@ -218,3 +218,9 @@ SOCIALACCOUNT_PROVIDERS = \
     {'facebook':
        {'VERIFIED_EMAIL': True}}
 SOCIALACCOUNT_ADAPTER = 'core.adapter.MySocialAccountAdapter'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
