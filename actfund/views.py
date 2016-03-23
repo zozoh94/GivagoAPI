@@ -53,10 +53,11 @@ def survey_completed_view(request):
     survey = Survey()    
     
     user = None
-    if(user_id and user_id != 0):
+    if(user_id and user_id != 0 and user_id != 1):
         try:
             user = get_user_model().objects.get(id=user_id)
         except get_user_model().DoesNotExist:
+            return  HttpResponseServerError(user_id)
             raise Http404("User does not exist")
     survey.user = user
         
