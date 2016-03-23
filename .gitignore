@@ -55,3 +55,6 @@ media/
 
 #Bower
 bower_components/
+
+#Dolphin .directory
+*.directory

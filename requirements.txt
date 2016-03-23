@@ -19,7 +19,7 @@ django-rest-auth==0.5.0
 django-subdomains==2.0.4
 django-taggit==0.17.0
 django-taggit-serializer==0.1.1
-django-taggit-suggest==0.2
+-e git+https://github.com/frankwiles/django-taggit-suggest.git@dba7ca11ff68227271c7408170918f1421fb5238#egg=django_taggit_suggest-origin/master
 djangorestframework==3.1.3
 GeoIP==1.3.2
 Markdown==2.6.2

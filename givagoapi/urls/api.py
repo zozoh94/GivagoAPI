@@ -10,6 +10,7 @@ from advertisement import views as advertisement_views
 from sponsor import views as sponsor_views
 from give import views as give_views
 from core import views as core_views
+from actfund import views as actfund_views
 
 router = routers.DefaultRouter()
 router.register(r'ad', advertisement_views.AdViewSet)
@@ -25,6 +26,8 @@ urlpatterns = [
     url(r'^auth/registration/verify-email/login/$', core_views.VerifyEmailLoginAutoView.as_view(), name='rest_verify_email_login_auto'),
     url(r'^app/installed/(?P<cid>[a-z0-9-]+)/$', advertisement_views.app_installed_view), 
     url(r'^app/(?P<app_id>\d+)/click/(?P<give_name>[\w_-]+)/(?P<username>[\w@.+_-]+)/$', advertisement_views.app_click_view),
+    url(r'^actfund/survey/completed', actfund_views.survey_completed_view),
+    url(r'^actfund/survey/total', actfund_views.survey_total_amount_view),
     url(r'^contact/charity', core_views.CharityContactFormView.as_view()),
     url(r'^contact/sponsor', core_views.SponsorContactFormView.as_view()),
     url(r'^contact/community', core_views.CommunityContactFormView.as_view()),
