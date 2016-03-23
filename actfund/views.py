@@ -42,7 +42,12 @@ def survey_completed_view(request):
     if(hashlib.md5((transaction_id+settings.PEANUTS_LAB_ACTFUND_TRANSACTION_ID).encode('utf-8')).hexdigest() != txn_hash):
         return  HttpResponseServerError('Transaction hash is not good')
     
-    user_id = request.GET.get('endUserId')
+    user_id = None
+    try:
+        user_id = int(request.GET.get('endUserId'))
+    except ValueError:
+        raise Http404("endUserId is not a number")
+    
     amount = request.GET.get('amt')
 
     survey = Survey()    
