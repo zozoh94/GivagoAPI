@@ -50,8 +50,8 @@ coverage.xml
 docs/_build/
 
 #static and media
-static/
-media/
+/static/
+/media/
 
 #Bower
 bower_components/
