@@ -19,6 +19,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+pip-self.json
 
 # Installer logs
 pip-log.txt
@@ -58,3 +59,10 @@ bower_components/
 
 #Dolphin .directory
 *.directory
+
+#SRC
+/src/
+
+#Settings
+givagoapi/settings_local.py
+givagoapi/settings_prod.py

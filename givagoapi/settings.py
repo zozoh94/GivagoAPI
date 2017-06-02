@@ -15,15 +15,13 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '8sdszf9e@yjt)1v$0!^iq5vioc37tz2zr*4@0qz_=4=3+g=!6i'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 ALLOWED_HOSTS = []
 
@@ -84,6 +82,15 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 )
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'HOST' : 'localhost',
+        'NAME' : 'givago',
+        'USER': 'givago',
+    }
+}
+
 GEOIP_PATH = os.path.join(BASE_DIR, "core/geoip")
 ALLOWED_COUNTRIES = ['GB']
 
@@ -106,20 +113,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'givagoapi.wsgi.application'
-
-# Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST' : 'localhost',
-        'NAME' : 'givago',
-        'USER': 'givago',
-        'PASSWORD' : '7rKhWAyKuDGYyDYH',
-    }
-}
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -220,12 +213,6 @@ SOCIALACCOUNT_PROVIDERS = \
        {'VERIFIED_EMAIL': True}}
 SOCIALACCOUNT_ADAPTER = 'core.adapter.MySocialAccountAdapter'
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-    }
-}
-
 PEANUTS_LAB_ACTFUND_APP_ID = '2b2ce92a9b0f82073d9bfdcd7bb5cb97'
 PEANUTS_LAB_ACTFUND_TRANSACTION_ID = '2c80c533b21cc83e8f1bf813fd7fffd2'
 PEANUTS_LAB_IPS = [
@@ -310,3 +297,29 @@ PEANUTS_LAB_IPS = [
     '107.20.201.76',
     '107.20.152.198'
 ]
+
+# Caches
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+
+try:
+    if ENV == 'PROD':
+        ALLOWED_HOSTS = ['api.givago.co', 'sponsor.givago.co', 'admin.givago.co']
+        STATIC_URL = "http://static.givago.co/"
+        MEDIA_URL = "http://media.givago.co/"
+        try:
+            from lib import funs givagoapi.settings_prod import *
+        except ImportError:
+            pass
+    else:
+        ENV = 'DEV'
+except NameError:
+    ENV = 'DEV'
+if ENV == 'DEV':
+    try:
+        from givagoapi.settings_local import *
+    except ImportError:
+            pass
