@@ -300,6 +300,7 @@ PEANUTS_LAB_IPS = [
 ]
 
 # Caches
+environ.Env.CACHE_SCHEMES.update({'uwsgicache': 'uwsgicache.UWSGICache'})
 CACHES = {
     'default': env.cache('CACHE_URL', default='locmemcache://givagoapi'),
 }
