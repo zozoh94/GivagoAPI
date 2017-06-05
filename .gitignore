@@ -64,5 +64,4 @@ bower_components/
 /src/
 
 #Settings
-givagoapi/settings_local.py
-givagoapi/settings_prod.py
+givagoapi/.env

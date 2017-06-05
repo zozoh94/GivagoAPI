@@ -13,10 +13,18 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
+import environ
+env = environ.Env() # set default values and casting
+environ.Env.read_env() # reading .env file
+
+ENV = env('ENV', default='DEV')
+DEBUG = env('DEBUG', default=True)
+print(DEBUG)
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '8sdszf9e@yjt)1v$0!^iq5vioc37tz2zr*4@0qz_=4=3+g=!6i'
+SECRET_KEY = env('SECRET_KEY', default='8sdszf9e@yjt)1v$0!^iq5vioc37tz2zr*4@0qz_=4=3+g=!6i')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -66,7 +74,7 @@ INSTALLED_APPS = (
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
-MIDDLEWARE_CLASSES = (
+IDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
     'subdomains.middleware.SubdomainURLRoutingMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -81,12 +89,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'HOST' : 'localhost',
-        'NAME' : 'givago',
-        'USER': 'givago',
-    }
+    'default': env.db('DATABASE_URL')
 }
 
 GEOIP_PATH = os.path.join(BASE_DIR, "core/geoip")
@@ -182,7 +185,8 @@ def email_confirmed_(request, email_address, **kwargs):
     user.is_active = True
     user.save()
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = env.email_url(
+    'EMAIL_URL', default='consolemail://')
 DEFAULT_FROM_EMAIL = 'noreply@givago.co'
 DEFAULT_CONTACT_EMAIL = 'hello@givago.co'
 
@@ -298,28 +302,11 @@ PEANUTS_LAB_IPS = [
 
 # Caches
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-    }
+    'default': env.cache('CACHE_URL', default='locmemcache://givagoapi'),
 }
 
-try:
-    if ENV == 'PROD':
-        ALLOWED_HOSTS = ['api.givago.co', 'sponsor.givago.co', 'admin.givago.co']
-        STATIC_URL = "http://static.givago.co/"
-        MEDIA_URL = "http://media.givago.co/"
-        DEBUG = False
-        try:
-            from givagoapi.settings_prod import *
-        except ImportError:
-            pass
-    else:
-        ENV = 'DEV'
-except NameError:
-    ENV = 'DEV'
-if ENV == 'DEV':
-    try:
-        DEBUG = True
-        from givagoapi.settings_local import *        
-    except ImportError:
-            pass
+if ENV == 'PROD':
+    ALLOWED_HOSTS = ['api.givago.co', 'sponsor.givago.co', 'admin.givago.co']
+    STATIC_URL = "http://static.givago.co/"
+    MEDIA_URL = "http://media.givago.co/"
+    DEBUG = env('DEBUG', default=False) 
