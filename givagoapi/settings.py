@@ -18,7 +18,10 @@ env = environ.Env() # set default values and casting
 environ.Env.read_env() # reading .env file
 
 ENV = env('ENV', default='DEV')
-DEBUG = env('DEBUG', default=True)
+if ENV == 'PROD':    
+    DEBUG = env('DEBUG', default=False)
+else:
+    DEBUG = env('DEBUG', default=True)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -28,7 +31,10 @@ SECRET_KEY = env('SECRET_KEY', default='8sdszf9e@yjt)1v$0!^iq5vioc37tz2zr*4@0qz_
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
-ALLOWED_HOSTS = []
+if ENV == 'PROD':
+    ALLOWED_HOSTS = ['api.givago.co', 'sponsor.givago.co', 'admin.givago.co']
+else:
+    ALLOWED_HOSTS = []
 
 SITE_ID = 1
 
@@ -193,8 +199,12 @@ STATICFILES_DIRS = (
     ( "bower_components", os.path.join(BASE_DIR, "bower_components")),
 )
 
-STATIC_URL = "/static/"
-MEDIA_URL = "/media/"
+if ENV == 'PROD':
+    STATIC_URL = "http://static.givago.co/"
+    MEDIA_URL = "http://media.givago.co/"
+else:
+    STATIC_URL = "/static/"
+    MEDIA_URL = "/media/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
@@ -304,9 +314,3 @@ environ.Env.CACHE_SCHEMES.update({'uwsgicache': 'uwsgicache.UWSGICache'})
 CACHES = {
     'default': env.cache('CACHE_URL', default='locmemcache://givagoapi'),
 }
-
-if ENV == 'PROD':
-    ALLOWED_HOSTS = ['api.givago.co', 'sponsor.givago.co', 'admin.givago.co']
-    STATIC_URL = "http://static.givago.co/"
-    MEDIA_URL = "http://media.givago.co/"
-    DEBUG = env('DEBUG', default=False) 
