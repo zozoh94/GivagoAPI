@@ -310,7 +310,7 @@ try:
         MEDIA_URL = "http://media.givago.co/"
         DEBUG = False
         try:
-            from lib import funs givagoapi.settings_prod import *
+            from givagoapi.settings_prod import *
         except ImportError:
             pass
     else:
