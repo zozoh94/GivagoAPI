@@ -19,7 +19,6 @@ environ.Env.read_env() # reading .env file
 
 ENV = env('ENV', default='DEV')
 DEBUG = env('DEBUG', default=True)
-print(DEBUG)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
