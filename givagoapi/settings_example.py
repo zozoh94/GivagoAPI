@@ -2,7 +2,7 @@
 #SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = False # Default True
+#DEBUG = False # Default True in local, False in prod
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases

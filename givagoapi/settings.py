@@ -18,8 +18,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '8sdszf9e@yjt)1v$0!^iq5vioc37tz2zr*4@0qz_=4=3+g=!6i'
 
-DEBUG = True
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
@@ -310,6 +308,7 @@ try:
         ALLOWED_HOSTS = ['api.givago.co', 'sponsor.givago.co', 'admin.givago.co']
         STATIC_URL = "http://static.givago.co/"
         MEDIA_URL = "http://media.givago.co/"
+        DEBUG = False
         try:
             from lib import funs givagoapi.settings_prod import *
         except ImportError:
@@ -320,6 +319,7 @@ except NameError:
     ENV = 'DEV'
 if ENV == 'DEV':
     try:
-        from givagoapi.settings_local import *
+        DEBUG = True
+        from givagoapi.settings_local import *        
     except ImportError:
             pass
