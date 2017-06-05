@@ -88,7 +88,7 @@ IDDLEWARE_CLASSES = (
 )
 
 DATABASES = {
-    'default': env.db('DATABASE_URL')
+    'default': env.db('DATABASE_URL', default='psql://givago@localhost/givago')
 }
 
 GEOIP_PATH = os.path.join(BASE_DIR, "core/geoip")
