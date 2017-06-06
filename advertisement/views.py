@@ -20,29 +20,24 @@ from .models import App
 from .models import AppClick
 from give.models import Gift
 from .permissions import IsManagerOfTheSponsorOrReadOnly
-from givagoapi.paginations import CustomPagination
 from sponsor.models import SponsorManager
 
-#class AdsPagination(CustomPagination):
-#    page_size = 4
-    
 class AdViewSet(viewsets.ModelViewSet):
     queryset = Ad.objects.all()
     serializer_class = AdSerializer
     permission_classes = (permissions.DjangoModelPermissionsOrAnonReadOnly, IsManagerOfTheSponsorOrReadOnly)
-    #pagination_class = AdsPagination
     def retrieve(self, request, pk=None):
         self.serializer_class = AdDetailSerializer
         self.queryset = Ad.objects.all().annotate(number_views=Count('views')).annotate(number_views_different_user=Count('views__viewer', distinct=True))
         return super(AdViewSet, self).retrieve(request, pk)
     def get_queryset(self):
         if(self.request.user.is_anonymous()):
-            return Ad.objects.filter(Q(remaining_views__gt=0) | Q(remaining_views=-1)).order_by('?')[:4]
+            return Ad.objects.filter(Q(remaining_views__gt=0) | Q(remaining_views=-1)).order_by('?')
         list_tags = self.request.user.interest.values_list('name', flat=True)
         ads = Ad.objects.filter(Q(remaining_views__gt=0) | Q(remaining_views=-1)).filter(tags__name__in=list_tags).exclude(views__viewer__id=self.request.user.id).distinct()
         if(len(ads) < 4):
             ads = Ad.objects.filter(Q(remaining_views__gt=0) | Q(remaining_views=-1))
-        return ads.order_by('?')[:4]
+        return ads.order_by('?')
     def perform_create(self, serializer):
         try:
             serializer.save(author=self.request.user.sponsormanager)

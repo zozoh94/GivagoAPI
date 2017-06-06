@@ -42,8 +42,7 @@ AUTH_USER_MODEL = 'core.User'
 
 # Application definition
 
-INSTALLED_APPS = (
-    'bootstrap_admin',
+INSTALLED_APPS = (    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,6 +50,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django_filters',
     'bootstrap3',
     'corsheaders',
     'allauth',
@@ -159,7 +159,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'givagoapi.paginations.CustomPagination',
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
 }
 
 AUTHENTICATION_BACKENDS = (
