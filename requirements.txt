@@ -21,7 +21,7 @@ django-rest-auth==0.9.1
 django-subdomains==2.1.0
 django-taggit==0.22.1
 django-taggit-serializer==0.1.5
--e git+https://github.com/frankwiles/django-taggit-suggest.git@dba7ca11ff68227271c7408170918f1421fb5238#egg=django_taggit_suggest
+-e git+https://github.com/frankwiles/django-taggit-suggest.git#egg=django_taggit_suggest
 djangorestframework==3.6.3
 GeoIP==1.3.2
 idna==2.5

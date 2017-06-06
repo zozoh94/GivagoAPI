@@ -34,7 +34,7 @@ SECRET_KEY = env('SECRET_KEY', default='8sdszf9e@yjt)1v$0!^iq5vioc37tz2zr*4@0qz_
 if ENV == 'PROD':
     ALLOWED_HOSTS = ['.givago.co',]
 else:
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ['*',]
 
 SITE_ID = 1
 
