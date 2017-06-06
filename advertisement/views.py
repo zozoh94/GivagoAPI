@@ -22,7 +22,6 @@ from give.models import Gift
 from .permissions import IsManagerOfTheSponsorOrReadOnly
 from givagoapi.paginations import CustomPagination
 from sponsor.models import SponsorManager
-from django_random_queryset import RandomManager
 
 #class AdsPagination(CustomPagination):
 #    page_size = 4
@@ -38,12 +37,12 @@ class AdViewSet(viewsets.ModelViewSet):
         return super(AdViewSet, self).retrieve(request, pk)
     def get_queryset(self):
         if(self.request.user.is_anonymous()):
-            return Ad.objects.filter(Q(remaining_views__gt=0) | Q(remaining_views=-1)).random(4)
+            return Ad.objects.filter(Q(remaining_views__gt=0) | Q(remaining_views=-1)).order_by('?')[:4]
         list_tags = self.request.user.interest.values_list('name', flat=True)
         ads = Ad.objects.filter(Q(remaining_views__gt=0) | Q(remaining_views=-1)).filter(tags__name__in=list_tags).exclude(views__viewer__id=self.request.user.id).distinct()
         if(len(ads) < 4):
             ads = Ad.objects.filter(Q(remaining_views__gt=0) | Q(remaining_views=-1))
-        return ads.random(4)
+        return ads.order_by('?')[:4]
     def perform_create(self, serializer):
         try:
             serializer.save(author=self.request.user.sponsormanager)

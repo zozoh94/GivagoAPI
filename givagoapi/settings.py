@@ -32,7 +32,7 @@ SECRET_KEY = env('SECRET_KEY', default='8sdszf9e@yjt)1v$0!^iq5vioc37tz2zr*4@0qz_
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 if ENV == 'PROD':
-    ALLOWED_HOSTS = ['api.givago.co', 'sponsor.givago.co', 'admin.givago.co']
+    ALLOWED_HOSTS = ['.givago.co',]
 else:
     ALLOWED_HOSTS = []
 
@@ -43,7 +43,7 @@ AUTH_USER_MODEL = 'core.User'
 # Application definition
 
 INSTALLED_APPS = (
-    'django_admin_bootstrapped',
+    'bootstrap_admin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -79,7 +79,7 @@ INSTALLED_APPS = (
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
-IDDLEWARE_CLASSES = (
+MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
     'subdomains.middleware.SubdomainURLRoutingMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -112,7 +112,12 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
         },
     },

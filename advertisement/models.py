@@ -1,7 +1,6 @@
 from django.db import models
 from embed_video.fields import EmbedVideoField
 from taggit.managers import TaggableManager
-from django_random_queryset import RandomManager
 from django.conf import settings
 import uuid
 
@@ -10,7 +9,6 @@ from sponsor.models import SponsorManager
 from give.models import ONG
 
 class Ad(models.Model):
-    objects = RandomManager()
     author = models.ForeignKey(SponsorManager, related_name='ads', null=True, on_delete=models.SET_NULL, blank=True)
     sponsor = models.ForeignKey(Sponsor, related_name='ads', null=False)
     name = models.CharField(max_length=255)
@@ -59,7 +57,6 @@ class App(models.Model):
     IT_COUNTRY = 'IT'
     COUNTRY_CHOICES = ((GB_COUNTRY, 'Great Britain'), (AU_COUNTRY, 'Australia'), (FR_COUNTRY, 'France'), (US_COUNTRY, 'USA'),
                        (BR_COUNTRY, 'Brazil'), (ES_COUNTRY, 'Spain'), (IT_COUNTRY, 'Italia'))
-    objects = RandomManager()
     name = models.CharField(max_length=255)
     country = models.CharField(null=False, max_length=2, choices=COUNTRY_CHOICES, default=GB_COUNTRY)
     link = models.URLField()
