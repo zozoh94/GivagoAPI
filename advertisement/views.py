@@ -10,6 +10,7 @@ from datetime import datetime
 from django.conf import settings
 from ipware.ip import get_ip
 from django.contrib.gis.geoip import GeoIP
+import distutils.core
 
 from .serializers import AdSerializer
 from .serializers import AdDetailSerializer
@@ -26,18 +27,22 @@ class AdViewSet(viewsets.ModelViewSet):
     queryset = Ad.objects.all()
     serializer_class = AdSerializer
     permission_classes = (permissions.DjangoModelPermissionsOrAnonReadOnly, IsManagerOfTheSponsorOrReadOnly)
+    def list(self, request):        
+        if bool(distutils.util.strtobool(request.query_params.get('random', '0'))):                    
+            self.queryset = self.get_queryset().order_by('?')
+        return super(AdViewSet, self).list(request)
     def retrieve(self, request, pk=None):
         self.serializer_class = AdDetailSerializer
         self.queryset = Ad.objects.all().annotate(number_views=Count('views')).annotate(number_views_different_user=Count('views__viewer', distinct=True))
         return super(AdViewSet, self).retrieve(request, pk)
     def get_queryset(self):
         if(self.request.user.is_anonymous()):
-            return Ad.objects.filter(Q(remaining_views__gt=0) | Q(remaining_views=-1)).order_by('?')
+            return Ad.objects.filter(Q(remaining_views__gt=0) | Q(remaining_views=-1))
         list_tags = self.request.user.interest.values_list('name', flat=True)
         ads = Ad.objects.filter(Q(remaining_views__gt=0) | Q(remaining_views=-1)).filter(tags__name__in=list_tags).exclude(views__viewer__id=self.request.user.id).distinct()
         if(len(ads) < 4):
             ads = Ad.objects.filter(Q(remaining_views__gt=0) | Q(remaining_views=-1))
-        return ads.order_by('?')
+        return ads
     def perform_create(self, serializer):
         try:
             serializer.save(author=self.request.user.sponsormanager)
