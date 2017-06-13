@@ -206,8 +206,8 @@ STATICFILES_DIRS = (
 )
 
 if ENV == 'PROD':
-    STATIC_URL = "http://static.givago.co/"
-    MEDIA_URL = "http://media.givago.co/"
+    STATIC_URL = "https://static.givago.co/"
+    MEDIA_URL = "https://media.givago.co/"
 else:
     STATIC_URL = "/static/"
     MEDIA_URL = "/media/"
